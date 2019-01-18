@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { View, Text } from "react-native";
 import { Card, CardSection, Input, Button } from "./common";
 import { connect } from "react-redux";
-import { emailChange } from "../actions";
+import { emailChange, passwordChange, loginUser } from "../actions";
 
 class LoginForm extends Component {
   constructor(props) {
@@ -12,6 +12,14 @@ class LoginForm extends Component {
 
   onEmailChange = text => {
     this.props.emailChange(text);
+  };
+  onPasswordChange = text => {
+    this.props.passwordChange(text);
+  };
+
+  onButtonPress = () => {
+    const { email, password } = this.props;
+    this.props.loginUser({ email, password });
   };
 
   render() {
@@ -26,10 +34,16 @@ class LoginForm extends Component {
           />
         </CardSection>
         <CardSection>
-          <Input label="Password" placeholder="password" secureTextEntry />
+          <Input
+            label="Password"
+            placeholder="password"
+            secureTextEntry
+            onChangeText={this.onPasswordChange}
+            value={this.props.password}
+          />
         </CardSection>
         <CardSection>
-          <Button>Log In </Button>
+          <Button onPress={this.onButtonPress}>Log In </Button>
         </CardSection>
       </Card>
     );
@@ -37,9 +51,9 @@ class LoginForm extends Component {
 }
 
 const mapStateToProps = state => {
-  return { email: state.auth.email };
+  return { email: state.auth.email, password: state.auth.password };
 };
 export default connect(
   mapStateToProps,
-  { emailChange }
+  { emailChange, passwordChange, loginUser }
 )(LoginForm);
